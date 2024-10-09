@@ -7,12 +7,9 @@
     <title>Home-ISFT 225</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
         integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A=="
         crossorigin="anonymous" referrerpolicy="no-referrer">
-
     <link rel="stylesheet" href="./styles/style.css">
     <link rel="stylesheet" href="./styles/styletablas.css">
 </head>
@@ -20,12 +17,12 @@
 
     <?php
     require('./conexion.php');
-    include "header.php";
+    include "nuevo-header.php";
 
         // Obtener los datos del formulario
-    $searchTerm = isset($_GET['buscar']) ? trim($_GET['buscar']) : '';
-    $filter = isset($_GET['filter']) ? $_GET['filter'] : 'all';
-
+    $searchTerm = isset($_GET['buscar']) ? trim($_GET['buscar']) : ''; //trim() se usa para eliminar espacios en blanco adicionales.
+    $filter = isset($_GET['filter']) ? $_GET['filter'] : 'all';  //se establece en 'all'. Este valor se utiliza para decidir en qué columna aplicar el filtro.
+ 
     // Construir la consulta SQL
         $sql = "SELECT 
             personal.id_personal, 
@@ -40,6 +37,9 @@
             personal.sexo_personal AS Sexo
         FROM personal";
 
+//Si el valor del filtro no es 'all' y el término de búsqueda no está vacío, se añade una condición WHERE a la consulta SQL.
+//$sql .= " WHERE $filter LIKE '%$searchTerm%'";: Esta línea añade la condición WHERE a la consulta para buscar el término 
+//en la columna especificada por $filter usando LIKE, lo cual permite buscar coincidencias parciales.
     if ($filter !== 'all' && !empty($searchTerm)) {
         $sql .= " WHERE $filter LIKE '%$searchTerm%'";
     }
@@ -52,45 +52,49 @@
   
     ?>
 
-    <main>
-        <!-- Contenedor principal -->
-        <div class="d-flex flex-nowrap sidebar-height">
-
-            <!-- Aside/Wardrobe/Sidebar Menu -->
-            <?php
-
-            include "sidebar.php";
-            ?>
-            <!-- Fin de sidebar/aside -->
-            <!-- Contenedor de ventana de contenido -->
-            <div class="col-9 offset-3 bg-light-subtle pt-5">
-                <div class="d-block p-3 m-4 h-100 ">
+<main class="container-fluid">
+        <!-- Contenedor principal sin sidebar -->
+        <div class="row">
+            <!-- Contenido que ocupa todo el ancho de la pantalla -->
+            <div class="col-12 bg-light-subtle pt-5">
+                <div class="d-block p-3 m-4 h-100">
                     <h3 class="card-footer-text mt-2 mb-5 p-2">Personal</h3>
 
                     <div class="container">
-                    <!-- Formulario de búsqueda y filtro -->
-                    <form action="" method="GET" class="mb-3">
-                        <div class="input-group">
-                            <select class="form-select" name="filter">
-                                <option value="all" <?php echo ($filter === 'all') ? 'selected' : ''; ?>>Todos los campos</option>
-                                <option value="personal.nombre_personal" <?php echo ($filter === 'personal.nombre_personal') ? 'selected' : ''; ?>>Nombre</option>
-                                <option value="personal.apellido_personal" <?php echo ($filter === 'personal.apellido_personal') ? 'selected' : ''; ?>>Apellido</option>
-                                <option value="personal.nrocuil_personal" <?php echo ($filter === 'personal.nrocuil_personal') ? 'selected' : ''; ?>>CUIL</option>
-                                <option value="personal.estado_personal" <?php echo ($filter === 'personal.estado_personal') ? 'selected' : ''; ?>>Estado</option>
-                                <option value="personal.rol_personal" <?php echo ($filter === 'personal.rol_personal') ? 'selected' : ''; ?>>Rol</option>
-                                <option value="personal.sexo_personal" <?php echo ($filter === 'personal.sexo_personal') ? 'selected' : ''; ?>>Sexo</option>
-                            </select>
-                            <input type="text" class="form-control" placeholder="Buscar" name="buscar" value="<?php echo htmlspecialchars($searchTerm); ?>">
-                            <button class="btn btn-outline-secondary" type="submit">Buscar</button>
-                        </div>
-                    </form>
-
-                    <div class="container">
+                        <!-- Formulario de búsqueda y filtro -->
+                        <form action="" method="GET" class="mb-3">
+                            <div class="input-group">
+                                <select class="form-select" name="filter">
+                                    <option value="all" <?php echo ($filter === 'all') ? 'selected' : ''; ?>>Todos los
+                                        campos</option>
+                                    <option value="personal.nombre_personal"
+                                        <?php echo ($filter === 'personal.nombre_personal') ? 'selected' : ''; ?>>
+                                        Nombre</option>
+                                    <option value="personal.apellido_personal"
+                                        <?php echo ($filter === 'personal.apellido_personal') ? 'selected' : ''; ?>>
+                                        Apellido</option>
+                                    <option value="personal.nrocuil_personal"
+                                        <?php echo ($filter === 'personal.nrocuil_personal') ? 'selected' : ''; ?>>
+                                        CUIL</option>
+                                    <option value="personal.estado_personal"
+                                        <?php echo ($filter === 'personal.estado_personal') ? 'selected' : ''; ?>>
+                                        Estado</option>
+                                    <option value="personal.rol_personal"
+                                        <?php echo ($filter === 'personal.rol_personal') ? 'selected' : ''; ?>>
+                                        Rol</option>
+                                    <option value="personal.sexo_personal"
+                                        <?php echo ($filter === 'personal.sexo_personal') ? 'selected' : ''; ?>>Sexo
+                                    </option>
+                                </select>
+                                <input type="text" class="form-control" placeholder="Buscar" name="buscar"
+                                    value="<?php echo htmlspecialchars($searchTerm); ?>">
+                                <button class="btn btn-outline-secondary" type="submit">Buscar</button>
+                            </div>
+                        </form>
 
                         <a href="ingresarpersonal.php" class="btn btn-primary custom-button mt-3">Ingresar Personal</a>
                         <table class="table table-bordered table-striped mt-3 space-between">
                             <thead>
-
                                 <tr>
                                     <th style='display:none'>ID personal</th>
                                     <th>CUIL</th>

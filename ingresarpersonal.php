@@ -19,6 +19,7 @@
   // Obtener los datos del formulario
   if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
+    // isset función que se utiliza para determinar si una variable está definida y no es null
     // Capturar el valor del select
     if (isset($_POST['rol_personal'])) {
       $rol_personal = $_POST['rol_personal'];
@@ -80,7 +81,7 @@
     $CVchecked = isset($_POST['check_cv']) ? 1 : 0;
     $TITchecked = isset($_POST['check_tit']) ? 1 : 0;
 
-    // //Evitar inyeccion SQL
+    // //Evitar inyeccion SQL ya que evita XSS al convertir caracteres especiales en entidades HTML.
     
     $rol_personal = htmlspecialchars($rol_personal, ENT_QUOTES, 'UTF-8');
     $nombre_usuario = htmlspecialchars($nombre_usuario, ENT_QUOTES, 'UTF-8');
@@ -270,21 +271,21 @@
   }
   $conn->close();
   // Header sin buscador
-  include 'headernosearch.php';
+  include 'nuevo-header.php';
 
   ?>
 
   <main>
     <!-- Contenedor principal -->
-    <div class="d-flex flex-nowrap sidebar-height">
+    <div class="container-fluid bg-light-subtle pt-3">
       <!-- Aside/Wardrobe/Sidebar Menu -->
       <?php
-      include "sidebar.php";
+      
       ?>
       <!-- Fin de sidebar/aside -->
 
       <!-- Contenedor de ventana de contenido -->
-      <div class="col-9 offset-3 bg-light-subtle pt-3">
+      
         <div class="d-block p-3 m-2 h-100 ">
         <div class="header">
           <h2>Ingresar Nuevo Personal</h2>
@@ -587,6 +588,7 @@
 
             </form>
             <?php
+
             if ($_FILES) {
               $destino = $_FILES['archivoSubido']['name'];
               move_uploaded_file($_FILES['archivoSubido']['tmp_name'], $destino);
@@ -652,6 +654,7 @@
     <!-- Fin de contenedor principal -->
   </main>
 
+
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       const form = document.querySelector('form');
@@ -669,15 +672,10 @@
       // Añadir un evento para cuando cambie el valor del select
       rolPersonal.addEventListener('change', checkRolSelection);
 
-      // Asegúrate de que el botón de envío esté habilitado cuando se seleccione un rol
-      form.addEventListener('submit', function(event) {
-        if (rolPersonal.value === '') {
-          event.preventDefault(); // Evita que el formulario se envíe
-          alert('Debe seleccionar un rol para el profesional.');
-        }
-      });
+      
     });
   </script>
+
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
     crossorigin="anonymous"></script>
