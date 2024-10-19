@@ -81,6 +81,8 @@
     $CVchecked = isset($_POST['check_cv']) ? 1 : 0;
     $TITchecked = isset($_POST['check_tit']) ? 1 : 0;
 
+    $url_drive = strtoupper($_POST['repositorio_documentacion']);
+
     // //Evitar inyeccion SQL ya que evita XSS al convertir caracteres especiales en entidades HTML.
     
     $rol_personal = htmlspecialchars($rol_personal, ENT_QUOTES, 'UTF-8');
@@ -123,6 +125,10 @@
     $carr2_titulo = htmlspecialchars($carr2_titulo_n, ENT_QUOTES, 'UTF-8');
 
     $estado_personal = htmlspecialchars($estado_personal_n, ENT_QUOTES, 'UTF-8');
+
+    $url_drive = htmlspecialchars($url_drive, ENT_QUOTES, 'UTF-8');
+
+
    // $observaciones = htmlspecialchars($observaciones_n, ENT_QUOTES, 'UTF-8');
 
 
@@ -181,7 +187,8 @@
     DNIchecked,
     CUILchecked,
     CVchecked,
-    TITchecked
+    TITchecked,
+    url_drive
     ) 
    
        VALUES (
@@ -193,13 +200,13 @@
         ?, ?, ?, ? ,?, 
         ?, ?, ?, ?, ?, 
         ?, ?, ?, /*?,*/ ? ,
-        ?, ?, ?)";
+        ?, ?, ?, ? )";
 
 
     $stmt = $conn->prepare($sql);
 
     $stmt->bind_param(
-      "ssssssissssssssisssiissssississssissssissiiii", //aca tambien borre la "S" correspondiente a "Observaciones"
+      "ssssssissssssssisssiissssississssissssissiiiis", //aca tambien borre la "S" correspondiente a "Observaciones"
       $rol_personal,
       $nombre_usuario,
       $password_usuario,
@@ -252,7 +259,8 @@
       $DNIchecked,
       $CUILchecked,
       $CVchecked,
-      $TITchecked
+      $TITchecked,
+      $url_drive
     );
 
     if ($stmt->execute()) {
@@ -531,6 +539,7 @@
                 <label> <input type="checkbox" name="check_tit[]" value="TIT" /> TITULO </label><br>
 
               </div>
+              
 
               <!--Fin Documentacion-->
 
@@ -558,6 +567,13 @@
 
               <!-- Adjuntar archivos -->
               <div class="col-md-12 checks position-relative">
+                <label class="form-label text-black-50" for="repositorio_documentacion">Repositorio de Documentación *</label>
+                <input type="text" class="form-control" id="repositorio_documentacion" name="repositorio_documentacion" placeholder="Repositorio de Documentación" required />
+              </div>
+
+
+              <!-- Adjuntar archivos -->
+              <div class="col-md-12 checks position-relative">
                 <div class="d-block mb-5 gap-2 align-content-start">
                   <h6 class="text-black-50">Ingresar archivos</h6><br>
                   <p class="text-black-50 ">Adjuntar documentación del docente</p>
@@ -565,10 +581,11 @@
                   <input type="file" class="btn btn-primary px-4 nav-bar border-0 text-wrap" name="archivo[]"
                     multiple="">
                   <br>
-
                 </div>
               </div>
               <!--Fin Situación laboral-->
+
+              
 
               <!--Observaciones-->
               <div class="col-md-12 position-relative">
@@ -675,6 +692,22 @@
       
     });
   </script>
+
+
+  <script>
+    document.getElementById('repositorio_documentacion').addEventListener('input', function () {
+      const input = this;
+      const pattern = /^https:\/\/drive\.google\.com\/.*$/;
+
+      if (!pattern.test(input.value)) {
+        input.setCustomValidity('Por favor, ingrese un enlace válido de Google Drive (debe comenzar con "https://drive.google.com/").');
+      } else {
+        input.setCustomValidity('');
+      }
+    });
+  </script>
+
+
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
