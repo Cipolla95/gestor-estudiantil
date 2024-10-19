@@ -102,6 +102,9 @@
             $CUILchecked = isset($_POST['check_cuil']) ? 1 : 0;
             $CVchecked = isset($_POST['check_cv']) ? 1 : 0;
             $TITchecked = isset($_POST['check_tit']) ? 1 : 0;
+
+            $url_drive = strtoupper($_POST['repositorio_documentacion']);
+
          //Sentencia SQL para insertar los datos
     
          $sql = "UPDATE personal SET
@@ -149,13 +152,14 @@
         DNIchecked=?,
         CUILchecked=?,
         CVchecked=?,
-        TITchecked=? WHERE id_personal=?";
+        TITchecked=?,
+        url_drive=? WHERE id_personal=?";
     }
     $stmt = $conn->prepare($sql);
     
     // Contar los parámetros y ajustar la cadena de tipos
     $stmt->bind_param(
-        "ssssssissssssssisssiissssississssissssissiiiii",
+        "ssssssissssssssisssiissssississssissssissiiiiis",
         $rol_personal,
         $nombre_usuario,
         $password_usuario,
@@ -201,6 +205,7 @@
         $CUILchecked,
         $CVchecked,
         $TITchecked,
+        $url_drive,
         $id_personal // Pasar el id_personal al final
     );
 
@@ -594,6 +599,13 @@
                                 <label class="form-label text-black-50" for="hasta">Hasta (xx/xx/xxxx)</label>
                                 <input class="form-control" type="text" name="hasta" id="hasta">
                             </div>
+
+                            <div class="col-md-12 checks position-relative">
+                                <label class="form-label text-black-50" for="repositorio_documentacion">Repositorio de Documentación *</label>
+                                <input type="text" class="form-control" id="repositorio_documentacion" value="<?= $row['url_drive'] ?>" name="repositorio_documentacion" placeholder="Repositorio de Documentación"/>
+                            </div>
+
+                        
                             <!--Fin Situación laboral-->
                             <!--Observaciones-->
                             <div class="col-md-12 position-relative">
